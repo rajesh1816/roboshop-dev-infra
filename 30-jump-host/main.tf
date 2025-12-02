@@ -17,7 +17,3 @@ resource "aws_instance" "jump_host" {
 }
 
 
-output "subnet_value" {
-  value     = local.public_subnets[0]
-  sensitive = true
-}
