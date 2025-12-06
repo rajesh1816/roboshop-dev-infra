@@ -7,7 +7,7 @@ terraform {
   }
 
   backend "s3" {
-    bucket       = "84s-demo-remotest"
+    bucket       = "84s-demo-remotest-comp"
     key          = "roboshop-dev-jump-host"
     region       = "us-east-1"
     use_lockfile = true
