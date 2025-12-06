@@ -30,7 +30,7 @@ module "backend_alb" {
 }
 
 #ingress rule for backend alb
-resource "aws_security_group_rule" "bastion_laptop" {
+resource "aws_security_group_rule" "bastion_alb_bastion" {
   type              = "ingress"
   from_port         = 80
   to_port           = 80
