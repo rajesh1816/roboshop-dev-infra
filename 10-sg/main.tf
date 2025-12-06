@@ -24,8 +24,8 @@ module "backend_alb" {
   source         = "git::https://github.com/rajesh1816/terraform-sg-module.git?ref=main"
   project        = var.project
   environment    = var.environment
-  sg_name        = var.backend_alb_sg_name
-  sg_description = var.backend_alb_description
+  sg_name        = "backend-alb"
+  sg_description = "for backend-alb"
   vpc_id         = data.aws_ssm_parameter.vpc_id.value
 }
 
