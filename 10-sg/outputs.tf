@@ -1,3 +1,3 @@
 output "sg_id" {
-  value = module.sg.sg_id
+  value = module.bastion.sg_id
 }
