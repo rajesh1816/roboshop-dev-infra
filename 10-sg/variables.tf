@@ -7,7 +7,7 @@ variable "environment" {
 }
 
 variable "sg_name" {
-  default = "roboshop-frontend-sg"
+  default = "roboshop-bastion-sg"
 }
 
 variable "sg_description" {
