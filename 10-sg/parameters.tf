@@ -1,11 +1,11 @@
 resource "aws_ssm_parameter" "bastion_sg_id" {
-  name  = "/${var.project}/${var.environment}/bastion_sg-id"
+  name  = "/${var.project}/${var.environment}/bastion-sg-id"
   type  = "String"
   value = module.bastion.sg_id
 }
 
 resource "aws_ssm_parameter" "backend_alb_sg_id" {
-  name  = "/${var.project}/${var.environment}/backend_alb_sg-id"
+  name  = "/${var.project}/${var.environment}/backend-alb-sg-id"
   type  = "String"
   value = module.backend_alb.sg_id
 }
