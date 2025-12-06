@@ -8,6 +8,7 @@ module "backend_alb" {
   security_groups = [local.backend_alb_sg_id]
   create_security_group = false
   enable_deletion_protection = false
+  version = "9.16.0"
 
   tags = merge(
     var.backend_alb_tags,
@@ -18,3 +19,5 @@ module "backend_alb" {
   )
 
 }
+
+
