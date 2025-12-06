@@ -21,3 +21,19 @@ module "backend_alb" {
 }
 
 
+resource "aws_lb_listener" "backend-alb" {
+  load_balancer_arn = module.backend_alb.arn
+  port              = 80
+  protocol          = "HTTP"
+
+  default_action {
+    type = "fixed-response"
+    fixed_response {
+      content_type = "text/plain"
+      message_body = "Hello, I am from ALB"
+      status_code  = "200"
+    }
+  }
+}
+
+
