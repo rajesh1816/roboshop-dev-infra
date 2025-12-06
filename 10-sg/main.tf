@@ -3,8 +3,8 @@ module "bastion" {
   source         = "git::https://github.com/rajesh1816/terraform-sg-module.git?ref=main"
   project        = var.project
   environment    = var.environment
-  sg_name        = var.sg_name
-  sg_description = var.sg_description
+  sg_name        = var.bastion_sg_name
+  sg_description = var.bastion_sg_description
   vpc_id         = data.aws_ssm_parameter.vpc_id.value
 }
 
@@ -24,8 +24,8 @@ module "backend_alb" {
   source         = "git::https://github.com/rajesh1816/terraform-sg-module.git?ref=main"
   project        = var.project
   environment    = var.environment
-  sg_name        = var.sg_name
-  sg_description = var.sg_description
+  sg_name        = var.backend_alb_sg_name
+  sg_description = var.backend_alb_description
   vpc_id         = data.aws_ssm_parameter.vpc_id.value
 }
 
@@ -38,4 +38,6 @@ resource "aws_security_group_rule" "bastion_alb_bastion" {
   source_security_group_id  = module.bastion.sg_id
   security_group_id = module.backend_alb.sg_id
 }
+
+
 

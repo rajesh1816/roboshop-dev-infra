@@ -6,11 +6,18 @@ variable "environment" {
   default = "dev"
 }
 
-variable "sg_name" {
+variable "bastion_sg_name" {
   default = "roboshop-bastion-sg"
 }
 
-variable "sg_description" {
+variable "bastion_sg_description" {
   default = "security group for roboshop frontend service"
 }
 
+variable "backend_alb_sg_name" {
+  default = "backend-alb-sg"
+}
+
+variable "backend_alb_description" {
+  default = "security group for backend alb"
+}
