@@ -3,7 +3,7 @@ resource "aws_instance" "jump_host" {
   instance_type = var.instance_type
 
   subnet_id              = local.public_subnets[0]
-  vpc_security_group_ids = [data.aws_ssm_parameter.sg_id.value]
+  vpc_security_group_ids = [data.aws_ssm_parameter.bastion_sg_id.value]
 
   associate_public_ip_address = true
 
@@ -11,7 +11,7 @@ resource "aws_instance" "jump_host" {
     var.jump_host_tags,
     local.common_tags,
     {
-      Name = "${var.project}-${var.environment}-jump-host"
+      Name = "${var.project}-${var.environment}-bastion"
     }
   )
 }
