@@ -5,6 +5,7 @@ resource "aws_instance" "mongodb" {
 
   subnet_id              = local.private_subnet_ids[0]
   vpc_security_group_ids = [local.mongodb_sg_id]
+  iam_instance_profile = "EC2toFetchParams"
 
 
   tags = merge(
