@@ -7,6 +7,7 @@ resource "aws_key_pair" "vpn" {
 
 
 resource "aws_instance" "openvpn" {
+  depends_on = [aws_marketplace_agreement.openvpn]
   ami           = data.aws_ami.openvpn.id
   instance_type = "t3.micro"
 
@@ -30,12 +31,7 @@ resource "aws_marketplace_agreement" "openvpn" {
   accept        = true
 }
 
-resource "aws_instance" "openvpn" {
-  depends_on = [aws_marketplace_agreement.openvpn]  # Ensure subscription is accepted first
-  ami           = "ami-xxxxxxxxxxxxxxx"            # Your OpenVPN AMI ID
-  instance_type = "t2.micro"
-  # other parameters...
-}
+
 
 
 
