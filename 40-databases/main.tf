@@ -58,6 +58,12 @@ resource "terraform_data" "mongodb" {
       "sudo sh /tmp/bootstrap.sh rabbitmq"
     ]
   }
+
+  provisioner "remote-exec" {
+    inline = [
+      "sudo sh /tmp/bootstrap.sh mysql"
+    ]
+  }
 }
 
 
