@@ -19,23 +19,23 @@ resource "aws_instance" "mongodb" {
 # mongodb configuration
 resource "terraform_data" "mongodb" {
 
-  depends_on = [aws_instance.mongodb.id]
+  depends_on       = [aws_instance.mongodb.id]
   triggers_replace = [aws_instance.mongodb.id]
 
 
   #  Copy script to EC2
   provisioner "file" {
-    source      = "bootstrap.sh" # Path to the local file
+    source      = "bootstrap.sh"      # Path to the local file
     destination = "/tmp/bootstrap.sh" # Destination path on the EC2 instance
   }
 
-  
+
   connection {
-    type        = "ssh"
-    host        = aws_instance.mongodb.private_ip
-    user        = "ec2-user"
-    password    = "DevOps321" 
-  
+    type     = "ssh"
+    host     = aws_instance.mongodb.private_ip
+    user     = "ec2-user"
+    password = "DevOps321"
+
   }
 
   #  RUN script on EC2
@@ -72,23 +72,23 @@ resource "aws_instance" "redis" {
 # redis configuration
 resource "terraform_data" "redis" {
 
-  depends_on = [aws_instance.redis.id]
+  depends_on       = [aws_instance.redis.id]
   triggers_replace = [aws_instance.redis.id]
 
 
   #  Copy script to EC2
   provisioner "file" {
-    source      = "bootstrap.sh" # Path to the local file
+    source      = "bootstrap.sh"      # Path to the local file
     destination = "/tmp/bootstrap.sh" # Destination path on the EC2 instance
   }
 
-  
+
   connection {
-    type        = "ssh"
-    host        = aws_instance.redis.private_ip
-    user        = "ec2-user"
-    password    = "DevOps321" 
-  
+    type     = "ssh"
+    host     = aws_instance.redis.private_ip
+    user     = "ec2-user"
+    password = "DevOps321"
+
   }
 
   #  RUN script on EC2
@@ -122,23 +122,23 @@ resource "aws_instance" "rabbitmq" {
 # rabbitmq configuration
 resource "terraform_data" "rabbitmq" {
 
-  depends_on = [aws_instance.rabbitmq.id]
+  depends_on       = [aws_instance.rabbitmq.id]
   triggers_replace = [aws_instance.rabbitmq.id]
 
 
   #  Copy script to EC2
   provisioner "file" {
-    source      = "bootstrap.sh" # Path to the local file
+    source      = "bootstrap.sh"      # Path to the local file
     destination = "/tmp/bootstrap.sh" # Destination path on the EC2 instance
   }
 
-  
+
   connection {
-    type        = "ssh"
-    host        = aws_instance.rabbitmq.private_ip
-    user        = "ec2-user"
-    password    = "DevOps321" 
-  
+    type     = "ssh"
+    host     = aws_instance.rabbitmq.private_ip
+    user     = "ec2-user"
+    password = "DevOps321"
+
   }
 
   #  RUN script on EC2
@@ -172,23 +172,23 @@ resource "aws_instance" "mysql" {
 # mysql configuration
 resource "terraform_data" "mysql" {
 
-  depends_on = [aws_instance.mysql.id]
+  depends_on       = [aws_instance.mysql.id]
   triggers_replace = [aws_instance.mysql.id]
 
 
   #  Copy script to EC2
   provisioner "file" {
-    source      = "bootstrap.sh" # Path to the local file
+    source      = "bootstrap.sh"      # Path to the local file
     destination = "/tmp/bootstrap.sh" # Destination path on the EC2 instance
   }
 
-  
+
   connection {
-    type        = "ssh"
-    host        = aws_instance.mysql.private_ip
-    user        = "ec2-user"
-    password    = "DevOps321" 
-  
+    type     = "ssh"
+    host     = aws_instance.mysql.private_ip
+    user     = "ec2-user"
+    password = "DevOps321"
+
   }
 
   #  RUN script on EC2
