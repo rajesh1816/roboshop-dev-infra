@@ -19,7 +19,7 @@ resource "aws_instance" "mongodb" {
 # mongodb configuration
 resource "terraform_data" "mongodb" {
 
-  depends_on       = [aws_instance.mongodb.id]
+  depends_on       = [aws_instance.mongodb]
   triggers_replace = [aws_instance.mongodb.id]
 
 
@@ -72,7 +72,7 @@ resource "aws_instance" "redis" {
 # redis configuration
 resource "terraform_data" "redis" {
 
-  depends_on       = [aws_instance.redis.id]
+  depends_on       = [aws_instance.redis]
   triggers_replace = [aws_instance.redis.id]
 
 
@@ -122,7 +122,7 @@ resource "aws_instance" "rabbitmq" {
 # rabbitmq configuration
 resource "terraform_data" "rabbitmq" {
 
-  depends_on       = [aws_instance.rabbitmq.id]
+  depends_on       = [aws_instance.rabbitmq]
   triggers_replace = [aws_instance.rabbitmq.id]
 
 
@@ -155,9 +155,9 @@ resource "terraform_data" "rabbitmq" {
 resource "aws_instance" "mysql" {
   ami           = local.ami_id
   instance_type = "t3.micro"
-
   subnet_id              = local.private_subnet_ids[0]
   vpc_security_group_ids = [local.mysql_sg_id]
+  iam_instance_profile = "EC2toFetchParams"
 
 
   tags = merge(
@@ -172,7 +172,7 @@ resource "aws_instance" "mysql" {
 # mysql configuration
 resource "terraform_data" "mysql" {
 
-  depends_on       = [aws_instance.mysql.id]
+  depends_on       = [aws_instance.mysql]
   triggers_replace = [aws_instance.mysql.id]
 
 
