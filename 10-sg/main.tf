@@ -31,12 +31,12 @@ module "backend_alb" {
 
 #ingress rule for backend alb
 resource "aws_security_group_rule" "backend_alb_bastion" {
-  type              = "ingress"
-  from_port         = 80
-  to_port           = 80
-  protocol          = "tcp"
-  source_security_group_id  = module.bastion.sg_id
-  security_group_id = module.backend_alb.sg_id
+  type                     = "ingress"
+  from_port                = 80
+  to_port                  = 80
+  protocol                 = "tcp"
+  source_security_group_id = module.bastion.sg_id
+  security_group_id        = module.backend_alb.sg_id
 }
 
 
@@ -58,8 +58,8 @@ resource "aws_security_group_rule" "vpn_ingress_rules" {
   type              = "ingress"
   from_port         = var.vpn_ports[count.index]
   to_port           = var.vpn_ports[count.index]
-  protocol          = "tcp" 
-  cidr_blocks       = ["0.0.0.0/0"] 
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = module.vpn.sg_id
 }
 
@@ -78,23 +78,23 @@ module "mongodb" {
 resource "aws_security_group_rule" "mongodb_vpn" {
   count = length(var.mongodb_ports)
 
-  type              = "ingress"
-  from_port         = var.mongodb_ports[count.index]
-  to_port           = var.mongodb_ports[count.index]
-  protocol          = "tcp" 
+  type                     = "ingress"
+  from_port                = var.mongodb_ports[count.index]
+  to_port                  = var.mongodb_ports[count.index]
+  protocol                 = "tcp"
   source_security_group_id = module.vpn.sg_id
-  security_group_id = module.mongodb.sg_id
+  security_group_id        = module.mongodb.sg_id
 }
 
 # allowing connection from bastion host to mongodb
 resource "aws_security_group_rule" "mongodb_bastion" {
-  count = length(var.mongodb_ports)
-  type              = "ingress"
-  from_port         = var.mongodb_ports[count.index]
-  to_port           = var.mongodb_ports[count.index]
-  protocol          = "tcp"
+  count                    = length(var.mongodb_ports)
+  type                     = "ingress"
+  from_port                = var.mongodb_ports[count.index]
+  to_port                  = var.mongodb_ports[count.index]
+  protocol                 = "tcp"
   source_security_group_id = module.bastion.sg_id
-  security_group_id = module.mongodb.sg_id
+  security_group_id        = module.mongodb.sg_id
 }
 
 
@@ -112,23 +112,23 @@ module "redis" {
 resource "aws_security_group_rule" "redis_vpn" {
   count = length(var.redis_ports)
 
-  type              = "ingress"
-  from_port         = var.redis_ports[count.index]
-  to_port           = var.redis_ports[count.index]
-  protocol          = "tcp" 
+  type                     = "ingress"
+  from_port                = var.redis_ports[count.index]
+  to_port                  = var.redis_ports[count.index]
+  protocol                 = "tcp"
   source_security_group_id = module.vpn.sg_id
-  security_group_id = module.redis.sg_id
+  security_group_id        = module.redis.sg_id
 }
 
 # allowing connection from bastion host to mongodb
 resource "aws_security_group_rule" "redis_bastion" {
-  count = length(var.redis_ports)
-  type              = "ingress"
-  from_port         = var.redis_ports[count.index]
-  to_port           = var.redis_ports[count.index]
-  protocol          = "tcp"
+  count                    = length(var.redis_ports)
+  type                     = "ingress"
+  from_port                = var.redis_ports[count.index]
+  to_port                  = var.redis_ports[count.index]
+  protocol                 = "tcp"
   source_security_group_id = module.bastion.sg_id
-  security_group_id = module.mongodb.sg_id
+  security_group_id        = module.mongodb.sg_id
 }
 
 
@@ -146,23 +146,23 @@ module "rabbitmq" {
 resource "aws_security_group_rule" "rabbitmq_vpn" {
   count = length(var.rabbitmq_ports)
 
-  type              = "ingress"
-  from_port         = var.rabbitmq_ports[count.index]
-  to_port           = var.rabbitmq_ports[count.index]
-  protocol          = "tcp" 
+  type                     = "ingress"
+  from_port                = var.rabbitmq_ports[count.index]
+  to_port                  = var.rabbitmq_ports[count.index]
+  protocol                 = "tcp"
   source_security_group_id = module.vpn.sg_id
-  security_group_id = module.redis.sg_id
+  security_group_id        = module.redis.sg_id
 }
 
 # allowing connection from bastion host to mongodb
 resource "aws_security_group_rule" "rabbitmq_bastion" {
-  count = length(var.rabbitmq_ports)
-  type              = "ingress"
-  from_port         = var.rabbitmq_ports[count.index]
-  to_port           = var.rabbitmq_ports[count.index]
-  protocol          = "tcp"
+  count                    = length(var.rabbitmq_ports)
+  type                     = "ingress"
+  from_port                = var.rabbitmq_ports[count.index]
+  to_port                  = var.rabbitmq_ports[count.index]
+  protocol                 = "tcp"
   source_security_group_id = module.bastion.sg_id
-  security_group_id = module.mongodb.sg_id
+  security_group_id        = module.mongodb.sg_id
 }
 
 #security group for rabbitmq
@@ -179,23 +179,23 @@ module "mysql" {
 resource "aws_security_group_rule" "mysql_vpn" {
   count = length(var.mysql_ports)
 
-  type              = "ingress"
-  from_port         = var.mysql_ports[count.index]
-  to_port           = var.mysql_ports[count.index]
-  protocol          = "tcp" 
+  type                     = "ingress"
+  from_port                = var.mysql_ports[count.index]
+  to_port                  = var.mysql_ports[count.index]
+  protocol                 = "tcp"
   source_security_group_id = module.vpn.sg_id
-  security_group_id = module.redis.sg_id
+  security_group_id        = module.redis.sg_id
 }
 
 # allowing connection from bastion host to mongodb
 resource "aws_security_group_rule" "mysql_bastion" {
-  count = length(var.mysql_ports)
-  type              = "ingress"
-  from_port         = var.mysql_ports[count.index]
-  to_port           = var.mysql_ports[count.index]
-  protocol          = "tcp"
+  count                    = length(var.mysql_ports)
+  type                     = "ingress"
+  from_port                = var.mysql_ports[count.index]
+  to_port                  = var.mysql_ports[count.index]
+  protocol                 = "tcp"
   source_security_group_id = module.bastion.sg_id
-  security_group_id = module.mongodb.sg_id
+  security_group_id        = module.mongodb.sg_id
 }
 
 
