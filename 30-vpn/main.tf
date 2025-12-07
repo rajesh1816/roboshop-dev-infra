@@ -1,7 +1,7 @@
 resource "aws_key_pair" "vpn" {
     key_name   = "openvpn"
     #public_key = file("C:\\keys\\openvpn.pub") in windows
-    public_key = file("tmp/openvpn.pub") # for linux
+    public_key = file("/tmp/openvpn.pub") # for linux
 }
 
 
