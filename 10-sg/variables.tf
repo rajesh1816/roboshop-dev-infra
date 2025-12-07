@@ -14,3 +14,7 @@ variable "bastion_sg_description" {
   default = "security group for roboshop frontend service"
 }
 
+variable "vpn_ports" {
+  type        = list(number)
+  default     = [22, 443, 1194, 943] 
+}
