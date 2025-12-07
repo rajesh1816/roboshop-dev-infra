@@ -25,4 +25,17 @@ resource "aws_instance" "openvpn" {
   )
 }
 
+resource "aws_marketplace_agreement" "openvpn" {
+  product_code  = "8icvdraalzbfrdevgamoddblf"  # From the error
+  accept        = true
+}
+
+resource "aws_instance" "openvpn" {
+  depends_on = [aws_marketplace_agreement.openvpn]  # Ensure subscription is accepted first
+  ami           = "ami-xxxxxxxxxxxxxxx"            # Your OpenVPN AMI ID
+  instance_type = "t2.micro"
+  # other parameters...
+}
+
+
 
