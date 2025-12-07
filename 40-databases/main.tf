@@ -25,8 +25,8 @@ resource "terraform_data" "mongodb" {
 
   #  Copy script to EC2
   provisioner "file" {
-    source      = "bootstrap.sh"      # Path to the local file
-    destination = "/tmp/bootstrap.sh" # Destination path on the EC2 instance
+    source      = "bootstrap.sh"
+    destination = "/tmp/bootstrap.sh"
   }
 
 
@@ -51,7 +51,7 @@ resource "terraform_data" "mongodb" {
 
 
 
-# redis instance
+/* # redis instance
 resource "aws_instance" "redis" {
   ami           = local.ami_id
   instance_type = "t3.micro"
@@ -198,6 +198,6 @@ resource "terraform_data" "mysql" {
       "sudo sh /tmp/bootstrap.sh mysql"
     ]
   }
-}
+} */
 
 
