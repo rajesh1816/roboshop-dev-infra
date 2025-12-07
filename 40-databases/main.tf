@@ -1,7 +1,7 @@
 # mongodb instance
 resource "aws_instance" "mongodb" {
   ami           = local.ami_id
-  instance_type = "t3.micro"
+  instance_type = "t2.medium"
 
   subnet_id              = local.private_subnet_ids[0]
   vpc_security_group_ids = [local.mongodb_sg_id]
@@ -43,6 +43,20 @@ resource "terraform_data" "mongodb" {
     inline = [
       "chmod +x /tmp/bootstrap.sh",
       "sudo sh /tmp/bootstrap.sh mongodb"
+    ]
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "chmod +x /tmp/bootstrap.sh",
+      "sudo sh /tmp/bootstrap.sh redis"
+    ]
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "chmod +x /tmp/bootstrap.sh",
+      "sudo sh /tmp/bootstrap.sh rabbitmq"
     ]
   }
 }
