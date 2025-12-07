@@ -10,7 +10,7 @@ variable "instance_type" {
   default = "t3.micro"
 }
 
-variable "jump_host_tags" {
+variable "openvpn_tags" {
   type = map(string)
   default = {
   }
