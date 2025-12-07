@@ -7,7 +7,6 @@ resource "aws_key_pair" "vpn" {
 
 
 resource "aws_instance" "openvpn" {
-  depends_on = [aws_marketplace_agreement.openvpn]
   ami           = data.aws_ami.openvpn.id
   instance_type = "t3.micro"
 
@@ -26,10 +25,7 @@ resource "aws_instance" "openvpn" {
   )
 }
 
-resource "aws_marketplace_agreement" "openvpn" {
-  product_code  = "8icvdraalzbfrdevgamoddblf"  # From the error
-  accept        = true
-}
+
 
 
 
