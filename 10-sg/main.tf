@@ -18,6 +18,15 @@ resource "aws_security_group_rule" "bastion_laptop" {
   security_group_id = module.bastion.sg_id
 }
 
+resource "aws_vpc_security_group_egress_rule" "bastion_outbound" {
+  security_group_id = module.bastion.sg_id
+  cidr_ipv4         = ["0.0.0.0/0"]
+  from_port         = 80
+  to_port           = 80
+  ip_protocol       = "tcp"
+  description       = "Allow outbound HTTP traffic"
+}
+
 
 #security group for backend alb
 module "backend_alb" {
