@@ -21,3 +21,12 @@ data "aws_ami" "openvpn" {
 data "aws_ssm_parameter" "vpn_sg_id" {
   name = "/${var.project}/${var.environment}/vpn-sg-id"
 }
+
+data "aws_ssm_parameter" "vpc_id" {
+  name = "/${var.project}/${var.environment}/vpc-id"
+}
+
+data "aws_ssm_parameter" "public_subnet_ids" {
+  name = "/${var.project}/${var.environment}/public-subnet-ids"
+}
+
