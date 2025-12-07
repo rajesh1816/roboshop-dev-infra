@@ -120,7 +120,7 @@ resource "aws_security_group_rule" "redis_vpn" {
   security_group_id        = module.redis.sg_id
 }
 
-# allowing connection from bastion host to mongodb
+# allowing connection from bastion host to redis
 resource "aws_security_group_rule" "redis_bastion" {
   count                    = length(var.redis_ports)
   type                     = "ingress"
@@ -128,7 +128,7 @@ resource "aws_security_group_rule" "redis_bastion" {
   to_port                  = var.redis_ports[count.index]
   protocol                 = "tcp"
   source_security_group_id = module.bastion.sg_id
-  security_group_id        = module.mongodb.sg_id
+  security_group_id        = module.redis.sg_id
 }
 
 
@@ -142,7 +142,7 @@ module "rabbitmq" {
   vpc_id         = local.vpc_id
 }
 
-# allowing connection from vpn host to redis
+# allowing connection from vpn host to rabbitmq
 resource "aws_security_group_rule" "rabbitmq_vpn" {
   count = length(var.rabbitmq_ports)
 
@@ -151,10 +151,10 @@ resource "aws_security_group_rule" "rabbitmq_vpn" {
   to_port                  = var.rabbitmq_ports[count.index]
   protocol                 = "tcp"
   source_security_group_id = module.vpn.sg_id
-  security_group_id        = module.redis.sg_id
+  security_group_id        = module.rabbitmq.sg_id
 }
 
-# allowing connection from bastion host to mongodb
+# allowing connection from bastion host to rabbitmq
 resource "aws_security_group_rule" "rabbitmq_bastion" {
   count                    = length(var.rabbitmq_ports)
   type                     = "ingress"
@@ -162,10 +162,10 @@ resource "aws_security_group_rule" "rabbitmq_bastion" {
   to_port                  = var.rabbitmq_ports[count.index]
   protocol                 = "tcp"
   source_security_group_id = module.bastion.sg_id
-  security_group_id        = module.mongodb.sg_id
+  security_group_id        = module.rabbitmq.sg_id
 }
 
-#security group for rabbitmq
+#security group for mysql
 module "mysql" {
   source         = "git::https://github.com/rajesh1816/terraform-sg-module.git?ref=main"
   project        = var.project
@@ -175,7 +175,7 @@ module "mysql" {
   vpc_id         = local.vpc_id
 }
 
-# allowing connection from vpn host to redis
+# allowing connection from vpn host to mysql
 resource "aws_security_group_rule" "mysql_vpn" {
   count = length(var.mysql_ports)
 
@@ -184,10 +184,10 @@ resource "aws_security_group_rule" "mysql_vpn" {
   to_port                  = var.mysql_ports[count.index]
   protocol                 = "tcp"
   source_security_group_id = module.vpn.sg_id
-  security_group_id        = module.redis.sg_id
+  security_group_id        = module.mysql.sg_id
 }
 
-# allowing connection from bastion host to mongodb
+# allowing connection from bastion host to mysql
 resource "aws_security_group_rule" "mysql_bastion" {
   count                    = length(var.mysql_ports)
   type                     = "ingress"
@@ -195,7 +195,7 @@ resource "aws_security_group_rule" "mysql_bastion" {
   to_port                  = var.mysql_ports[count.index]
   protocol                 = "tcp"
   source_security_group_id = module.bastion.sg_id
-  security_group_id        = module.mongodb.sg_id
+  security_group_id        = module.mysql.sg_id
 }
 
 

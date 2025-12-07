@@ -25,13 +25,16 @@ variable "mongodb_ports" {
 }
 
 variable "redis_ports" {
+  type    = list(number)
   default = [22, 6379]
 }
 
 variable "mysql_ports" {
+  type    = list(number)
   default = [22, 3306]
 }
 
 variable "rabbitmq_ports" {
+  type    = list(number)
   default = [22, 5672]
 }
