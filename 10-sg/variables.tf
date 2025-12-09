@@ -38,3 +38,8 @@ variable "rabbitmq_ports" {
   type    = list(number)
   default = [22, 5672]
 }
+
+variable "databases_ports" {
+  type = list(number)
+  default = [ 22, 27017, 6379, 3306, 5672 ]
+}

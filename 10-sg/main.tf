@@ -236,8 +236,8 @@ resource "aws_security_group_rule" "databases_egress_all" {
   type              = "egress"
   from_port         = 0
   to_port           = 0
-  protocol          = "-1"                # all protocols
-  cidr_blocks       = ["0.0.0.0/0"]       # allow to anywhere
+  protocol          = "-1"          # all protocols
+  cidr_blocks       = ["0.0.0.0/0"] # allow to anywhere
   security_group_id = module.databases.sg_id
 }
 
