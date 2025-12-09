@@ -9,7 +9,7 @@ module "bastion" {
 }
 
 #ingress rule for bastion sg
-resource "aws_security_group_rule" "bastion_laptop" {
+resource "aws_security_group_rule" "bastion_ssh" {
   type              = "ingress"
   from_port         = 22
   to_port           = 22

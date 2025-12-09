@@ -20,9 +20,7 @@ resource "aws_instance" "mongodb" {
 # mongodb configuration
 resource "terraform_data" "mongodb" {
 
-  depends_on       = [aws_instance.mongodb]
   triggers_replace = [aws_instance.mongodb.id]
-
 
   #  Copy script to EC2
   provisioner "file" {
@@ -30,13 +28,11 @@ resource "terraform_data" "mongodb" {
     destination = "/tmp/bootstrap.sh"
   }
 
-
   connection {
     type     = "ssh"
     host     = aws_instance.mongodb.private_ip
     user     = "ec2-user"
     password = "DevOps321"
-
   }
 
   #  RUN script on EC2
