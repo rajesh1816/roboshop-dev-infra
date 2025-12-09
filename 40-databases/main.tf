@@ -1,13 +1,70 @@
-# mongodb instance
+resource "aws_instance" "databases" {
+  ami                    = local.ami_id
+  instance_type          = "t2.medium"
+  subnet_id              = local.database_subnet_ids
+  vpc_security_group_ids = [local.databases.sg_id]
+  iam_instance_profile = "EC2toFetchParams"
+  tags = merge(
+    local.common_tags,
+    {
+      Name = "${var.project}-${var.environment}-databases"
+    }
+  )
+}
+
+# mongodb configuration
+resource "terraform_data" "databases" {
+  triggers_replace = [aws_instance.databases.id]
+  #  Copy script to EC2
+  provisioner "file" {
+    source      = "bootstrap.sh"
+    destination = "/tmp/bootstrap.sh"
+  }
+  connection {
+    type     = "ssh"
+    host     = aws_instance.databases.private_ip
+    user     = "ec2-user"
+    password = "DevOps321"
+  }
+  #  RUN script on EC2
+  provisioner "remote-exec" {
+    inline = [
+      "chmod +x /tmp/bootstrap.sh",
+      "sudo sh /tmp/bootstrap.sh mongodb ${var.environment}",
+      "sudo sh /tmp/bootstrap.sh mysql ${var.environment}",
+      "sudo sh /tmp/bootstrap.sh redis ${var.environment}",
+      "sudo sh /tmp/bootstrap.sh rabbitmq ${var.environment}"
+    ]
+  }
+} 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* # mongodb instance
 resource "aws_instance" "mongodb" {
   ami           = local.ami_id
-  instance_type = "t2.medium"
-
-  subnet_id              = local.private_subnet_ids[0]
+  instance_type = "t3.micro"
+  subnet_id              = local.database_subnet_ids
   vpc_security_group_ids = [local.mongodb_sg_id]
-  iam_instance_profile = "EC2toFetchParams"
-
-
   tags = merge(
     local.common_tags,
     {
@@ -16,56 +73,38 @@ resource "aws_instance" "mongodb" {
   )
 }
 
-
 # mongodb configuration
 resource "terraform_data" "mongodb" {
 
   triggers_replace = [aws_instance.mongodb.id]
-
   #  Copy script to EC2
   provisioner "file" {
     source      = "bootstrap.sh"
     destination = "/tmp/bootstrap.sh"
   }
-
   connection {
     type     = "ssh"
     host     = aws_instance.mongodb.private_ip
     user     = "ec2-user"
     password = "DevOps321"
   }
-
   #  RUN script on EC2
   provisioner "remote-exec" {
     inline = [
       "chmod +x /tmp/bootstrap.sh",
-      "sudo sh /tmp/bootstrap.sh mongodb"
+      "sudo sh /tmp/bootstrap.sh mongodb {{ var.environment }}"
     ]
   }
-
-  provisioner "remote-exec" {
-    inline = [
-      "sudo sh /tmp/bootstrap.sh redis"
-    ]
-  }
-
-  provisioner "remote-exec" {
-    inline = [
-      "sudo sh /tmp/bootstrap.sh rabbitmq"
-    ]
-  }
-
-  provisioner "remote-exec" {
-    inline = [
-      "sudo sh /tmp/bootstrap.sh mysql"
-    ]
-  }
-}
+} */
 
 
 
 
 
+
+
+
+#iam_instance_profile = "EC2toFetchParams"
 /* # redis instance
 resource "aws_instance" "redis" {
   ami           = local.ami_id
@@ -86,8 +125,6 @@ resource "aws_instance" "redis" {
 
 # redis configuration
 resource "terraform_data" "redis" {
-
-  depends_on       = [aws_instance.redis]
   triggers_replace = [aws_instance.redis.id]
 
 
@@ -96,8 +133,6 @@ resource "terraform_data" "redis" {
     source      = "bootstrap.sh"      # Path to the local file
     destination = "/tmp/bootstrap.sh" # Destination path on the EC2 instance
   }
-
-
   connection {
     type     = "ssh"
     host     = aws_instance.redis.private_ip

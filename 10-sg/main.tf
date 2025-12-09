@@ -199,6 +199,53 @@ resource "aws_security_group_rule" "mysql_bastion" {
 }
 
 
+# security for all databases
+module "databases" {
+  source         = "git::https://github.com/rajesh1816/terraform-sg-module.git?ref=main"
+  project        = var.project
+  environment    = var.environment
+  sg_name        = "databases-sg"
+  sg_description = "for databases"
+  vpc_id         = local.vpc_id
+}
+
+# allowing connection from vpn host to databases host
+resource "aws_security_group_rule" "databases_vpn" {
+  count                    = length(var.databases_ports)
+  type                     = "ingress"
+  from_port                = var.databases_ports[count.index]
+  to_port                  = var.databases_ports[count.index]
+  protocol                 = "tcp"
+  source_security_group_id = module.vpn.sg_id
+  security_group_id        = module.databases.sg_id
+}
+
+# allowing connection from bastion host to databases host
+resource "aws_security_group_rule" "databases_bastion" {
+  count                    = length(var.databases_ports)
+  type                     = "ingress"
+  from_port                = var.databases_ports[count.index]
+  to_port                  = var.databases_ports[count.index]
+  protocol                 = "tcp"
+  source_security_group_id = module.bastion.sg_id
+  security_group_id        = module.databases.sg_id
+}
+
+# databases host outbound rule
+resource "aws_security_group_rule" "databases_egress_all" {
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"                # all protocols
+  cidr_blocks       = ["0.0.0.0/0"]       # allow to anywhere
+  security_group_id = module.databases.sg_id
+}
+
+
+
+
+
+
 
 
 
