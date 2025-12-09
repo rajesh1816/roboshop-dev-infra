@@ -35,3 +35,49 @@ systemctl restart openvpnas
 # 7. Save and start
 $SCRIPTS/sacli ConfigSync
 $SCRIPTS/sacli start
+
+
+
+
+
+#!/bin/bash
+set -euo pipefail
+ 
+SCRIPTS="/usr/local/openvpn_as/scripts"
+ 
+USERNAME="openvpn"
+PASSWORD="Openvpn@123!"   # Change this after login
+ 
+echo "[1/8] Waiting for OpenVPN Access Server to start..."
+until curl -ks https://127.0.0.1:943/ >/dev/null 2>&1; do
+  sleep 3
+done
+echo "OpenVPN UI is ready."
+ 
+echo "[2/8] Accepting EULA..."
+$SCRIPTS/sacli --key "eula" --value "true" ConfigPut
+ 
+echo "[3/8] Creating admin user..."
+$SCRIPTS/sacli --user "$USERNAME" --new_pass "$PASSWORD" SetLocalPassword
+$SCRIPTS/sacli --user "$USERNAME" --key "prop_superuser" --value "true" UserPropPut
+ 
+echo "[4/8] Configuring VPN listener port (1194/udp)..."
+$SCRIPTS/sacli --key "vpn.server.port" --value "1194" ConfigPut
+$SCRIPTS/sacli --key "vpn.server.protocol" --value "udp" ConfigPut
+ 
+echo "[5/8] Configuring DNS..."
+$SCRIPTS/sacli --key "vpn.client.dns.server.auto" --value "true" ConfigPut
+$SCRIPTS/sacli --key "cs.prof.defaults.dns.0" --value "8.8.8.8" ConfigPut
+$SCRIPTS/sacli --key "cs.prof.defaults.dns.1" --value "1.1.1.1" ConfigPut
+ 
+echo "[6/8] Enabling 'route all traffic through VPN'..."
+$SCRIPTS/sacli --key "vpn.client.routing.reroute_gw" --value "true" ConfigPut
+ 
+echo "[7/8] Blocking VPN clients from accessing server local network..."
+$SCRIPTS/sacli --key "vpn.server.routing.gateway_access" --value "false" ConfigPut
+ 
+echo "[8/8] Restarting OpenVPN Access Server..."
+systemctl restart openvpnas
+$SCRIPTS/sacli ConfigSync
+ 
+echo "OpenVPN Access Server setup completed successfully."
