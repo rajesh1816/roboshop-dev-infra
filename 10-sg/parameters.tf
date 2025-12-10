@@ -17,7 +17,7 @@ resource "aws_ssm_parameter" "vpn_sg_id" {
   value = module.vpn.sg_id
 }
 
-resource "aws_ssm_parameter" "mongodb_sg_id" {
+/* resource "aws_ssm_parameter" "mongodb_sg_id" {
   name  = "/${var.project}/${var.environment}/mongodb-sg-id"
   type  = "String"
   value = module.mongodb.sg_id
@@ -39,7 +39,7 @@ resource "aws_ssm_parameter" "mysql_sg_id" {
   name  = "/${var.project}/${var.environment}/mysql-sg-id"
   type  = "String"
   value = module.mysql.sg_id
-}
+} */
 
 resource "aws_ssm_parameter" "catalogue_sg_id" {
   name  = "/${var.project}/${var.environment}/catalogue-sg-id"
