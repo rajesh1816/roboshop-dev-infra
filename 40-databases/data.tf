@@ -2,8 +2,8 @@ data "aws_ssm_parameter" "vpc_id" {
   name = "/${var.project}/${var.environment}/vpc-id"
 }
 
-data "aws_ssm_parameter" "private_subnet_ids" {
-  name = "/${var.project}/${var.environment}/private-subnet-ids"
+data "aws_ssm_parameter" "database_subnet_ids" {
+  name = "/${var.project}/${var.environment}/database-subnet-ids"
 }
 
 data "aws_ssm_parameter" "vpn_sg_id" {
