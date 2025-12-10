@@ -2,7 +2,7 @@ resource "aws_instance" "databases" {
   ami                    = local.ami_id
   instance_type          = "t2.medium"
   subnet_id              = local.database_subnet_ids
-  vpc_security_group_ids = [local.databases.sg_id]
+  vpc_security_group_ids = [local.databases_sg_id]
   iam_instance_profile = "EC2toFetchParams"
   tags = merge(
     local.common_tags,
