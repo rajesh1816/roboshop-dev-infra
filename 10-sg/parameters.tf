@@ -40,3 +40,15 @@ resource "aws_ssm_parameter" "mysql_sg_id" {
   type  = "String"
   value = module.mysql.sg_id
 }
+
+resource "aws_ssm_parameter" "catalogue_sg_id" {
+  name  = "/${var.project}/${var.environment}/catalogue-sg-id"
+  type  = "String"
+  value = module.catalogue.sg_id
+}
+
+resource "aws_ssm_parameter" "databases_sg_id" {
+  name  = "/${var.project}/${var.environment}/databases-sg-id"
+  type  = "String"
+  value = module.databases.sg_id
+}

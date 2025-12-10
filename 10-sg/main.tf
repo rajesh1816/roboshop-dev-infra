@@ -18,6 +18,16 @@ resource "aws_security_group_rule" "bastion_ssh" {
   security_group_id = module.bastion.sg_id
 }
 
+# bastion host outbound rule
+resource "aws_security_group_rule" "bastion_egress_all" {
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"          # all protocols
+  cidr_blocks       = ["0.0.0.0/0"] # allow to anywhere
+  security_group_id = module.bastion.sg_id
+}
+
 
 #security group for backend alb
 module "backend_alb" {
@@ -37,6 +47,16 @@ resource "aws_security_group_rule" "backend_alb_bastion" {
   protocol                 = "tcp"
   source_security_group_id = module.bastion.sg_id
   security_group_id        = module.backend_alb.sg_id
+}
+
+# backend-alb host outbound rule
+resource "aws_security_group_rule" "backend_alb_egress_all" {
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"          # all protocols
+  cidr_blocks       = ["0.0.0.0/0"] # allow to anywhere
+  security_group_id = module.backend_alb.sg_id
 }
 
 
@@ -60,6 +80,16 @@ resource "aws_security_group_rule" "vpn_ingress_rules" {
   to_port           = var.vpn_ports[count.index]
   protocol          = "tcp"
   cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = module.vpn.sg_id
+}
+
+# vpn host outbound rule
+resource "aws_security_group_rule" "vpn_egress_all" {
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"          # all protocols
+  cidr_blocks       = ["0.0.0.0/0"] # allow to anywhere
   security_group_id = module.vpn.sg_id
 }
 
@@ -97,6 +127,16 @@ resource "aws_security_group_rule" "mongodb_bastion" {
   security_group_id        = module.mongodb.sg_id
 }
 
+# mongodb host outbound rule
+resource "aws_security_group_rule" "mongodb_egress_all" {
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"          # all protocols
+  cidr_blocks       = ["0.0.0.0/0"] # allow to anywhere
+  security_group_id = module.mongodb.sg_id
+}
+
 
 #security group for redis
 module "redis" {
@@ -129,6 +169,16 @@ resource "aws_security_group_rule" "redis_bastion" {
   protocol                 = "tcp"
   source_security_group_id = module.bastion.sg_id
   security_group_id        = module.redis.sg_id
+}
+
+# redis host outbound rule
+resource "aws_security_group_rule" "redis_egress_all" {
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"          # all protocols
+  cidr_blocks       = ["0.0.0.0/0"] # allow to anywhere
+  security_group_id = module.redis.sg_id
 }
 
 
@@ -165,6 +215,16 @@ resource "aws_security_group_rule" "rabbitmq_bastion" {
   security_group_id        = module.rabbitmq.sg_id
 }
 
+# rabbitmq host outbound rule
+resource "aws_security_group_rule" "rabbitmq_egress_all" {
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"          # all protocols
+  cidr_blocks       = ["0.0.0.0/0"] # allow to anywhere
+  security_group_id = module.rabbitmq.sg_id
+}
+
 #security group for mysql
 module "mysql" {
   source         = "git::https://github.com/rajesh1816/terraform-sg-module.git?ref=main"
@@ -196,6 +256,16 @@ resource "aws_security_group_rule" "mysql_bastion" {
   protocol                 = "tcp"
   source_security_group_id = module.bastion.sg_id
   security_group_id        = module.mysql.sg_id
+}
+
+# mysql host outbound rule
+resource "aws_security_group_rule" "mysql_egress_all" {
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"          # all protocols
+  cidr_blocks       = ["0.0.0.0/0"] # allow to anywhere
+  security_group_id = module.mysql.sg_id
 }
 
 
@@ -240,6 +310,70 @@ resource "aws_security_group_rule" "databases_egress_all" {
   cidr_blocks       = ["0.0.0.0/0"] # allow to anywhere
   security_group_id = module.databases.sg_id
 }
+
+# security for catalogue
+module "catalogue" {
+  source         = "git::https://github.com/rajesh1816/terraform-sg-module.git?ref=main"
+  project        = var.project
+  environment    = var.environment
+  sg_name        = "catalogue-sg"
+  sg_description = "for catalogue"
+  vpc_id         = local.vpc_id
+}
+
+
+# allowing catalogue to mongodb
+resource "aws_security_group_rule" "mongodb_catalogue" {
+  type              = "ingress"
+  from_port         = 27017
+  to_port           = 27017
+  protocol          = "tcp"
+  source_security_group_id = module.catalogue.sg_id
+  security_group_id = module.mongodb.sg_id
+}
+
+#Catalogue vpn ssh 
+resource "aws_security_group_rule" "catalogue_vpn_ssh" {
+  type              = "ingress"
+  from_port         = 22
+  to_port           = 22
+  protocol          = "tcp"
+  source_security_group_id = module.vpn.sg_id
+  security_group_id = module.catalogue.sg_id
+}
+
+# catalogue bastion ssh
+resource "aws_security_group_rule" "catalogue_bastion_ssh" {
+  type              = "ingress"
+  from_port         = 22
+  to_port           = 22
+  protocol          = "tcp"
+  source_security_group_id = module.bastion.sg_id
+  security_group_id = module.catalogue.sg_id
+}
+
+
+# to access in browser catalogue service
+resource "aws_security_group_rule" "catalogue_vpn_http" {
+  type              = "ingress"
+  from_port         = 8080
+  to_port           = 8080
+  protocol          = "tcp"
+  source_security_group_id = module.vpn.sg_id
+  security_group_id = module.catalogue.sg_id
+}
+
+# allowing backend_alb to catalogue
+resource "aws_security_group_rule" "catalogue_backend_alb" {
+  type              = "ingress"
+  from_port         = 8080
+  to_port           = 8080
+  protocol          = "tcp"
+  source_security_group_id = module.backend_alb.sg_id
+  security_group_id = module.catalogue.sg_id
+}
+
+
 
 
 
