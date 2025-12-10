@@ -332,6 +332,16 @@ resource "aws_security_group_rule" "mongodb_catalogue" {
   security_group_id = module.mongodb.sg_id
 }
 
+# allowing catalogue to mongodb
+resource "aws_security_group_rule" "mongodb_catalogue" {
+  type              = "ingress"
+  from_port         = 27017
+  to_port           = 27017
+  protocol          = "tcp"
+  source_security_group_id = module.catalogue.sg_id
+  security_group_id = module.databases.sg_id
+}
+
 #Catalogue vpn ssh 
 resource "aws_security_group_rule" "catalogue_vpn_ssh" {
   type              = "ingress"
