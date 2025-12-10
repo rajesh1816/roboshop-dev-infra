@@ -208,6 +208,16 @@ resource "aws_security_group_rule" "catalogue_vpn_http" {
   security_group_id = module.catalogue.sg_id
 }
 
+# to access in bastion catalogue service
+resource "aws_security_group_rule" "catalogue_vpn_http" {
+  type              = "ingress"
+  from_port         = 8080
+  to_port           = 8080
+  protocol          = "tcp"
+  source_security_group_id = module.bastion.sg_id
+  security_group_id = module.catalogue.sg_id
+}
+
 # allowing backend_alb to catalogue
 resource "aws_security_group_rule" "catalogue_backend_alb" {
   type              = "ingress"
