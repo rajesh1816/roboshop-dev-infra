@@ -14,7 +14,7 @@ data "aws_ssm_parameter" "bastion_sg_id" {
   name = "/${var.project}/${var.environment}/bastion-sg-id"
 }
 
-data "aws_ssm_parameter" "mongodb_sg_id" {
+/* data "aws_ssm_parameter" "mongodb_sg_id" {
   name = "/${var.project}/${var.environment}/mongodb-sg-id"
 }
 
@@ -28,7 +28,7 @@ data "aws_ssm_parameter" "rabbitmq_sg_id" {
 
 data "aws_ssm_parameter" "mysql_sg_id" {
   name = "/${var.project}/${var.environment}/mysql-sg-id"
-}
+} */
 
 data "aws_ssm_parameter" "databases_sg_id" {
   name = "/${var.project}/${var.environment}/databases-sg-id"
