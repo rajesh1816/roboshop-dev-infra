@@ -39,7 +39,45 @@ resource "terraform_data" "databases" {
 } 
 
 
+#record for mongodb
+resource "aws_route53_record" "mongodb_r53" {
+  zone_id = var.zone_id
+  name    = "mongodb-${var.environment}.${var.zone_name}" #mongodb-dev.rajeshit.space
+  type    = "A"
+  ttl     = 1
+  records = [aws_instance.databases.private_ip]
+  allow_overwrite = true
+}
 
+#record for redis
+resource "aws_route53_record" "redis_r53" {
+  zone_id = var.zone_id
+  name    = "redis-${var.environment}.${var.zone_name}" #redis-dev.rajeshit.space
+  type    = "A"
+  ttl     = 1
+  records = [aws_instance.databases.private_ip]
+  allow_overwrite = true
+}
+
+#record for rabbitmq
+resource "aws_route53_record" "rabbitmq_r53" {
+  zone_id = var.zone_id
+  name    = "rabbitmq-${var.environment}.${var.zone_name}" #rabbitmq-dev.rajeshit.space
+  type    = "A"
+  ttl     = 1
+  records = [aws_instance.databases.private_ip]
+  allow_overwrite = true
+}
+
+#record for mysql
+resource "aws_route53_record" "mysql_r53" {
+  zone_id = var.zone_id
+  name    = "mysql-${var.environment}.${var.zone_name}" #mysql-dev.rajeshit.space
+  type    = "A"
+  ttl     = 1
+  records = [aws_instance.databases.private_ip]
+  allow_overwrite = true
+}
 
 
 
