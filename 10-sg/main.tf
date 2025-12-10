@@ -209,7 +209,7 @@ resource "aws_security_group_rule" "catalogue_vpn_http" {
 }
 
 # to access in bastion catalogue service
-resource "aws_security_group_rule" "catalogue_vpn_http" {
+resource "aws_security_group_rule" "catalogue_bastion_http" {
   type              = "ingress"
   from_port         = 8080
   to_port           = 8080
