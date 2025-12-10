@@ -373,6 +373,16 @@ resource "aws_security_group_rule" "catalogue_backend_alb" {
   security_group_id = module.catalogue.sg_id
 }
 
+# catalogue host outbound rule
+resource "aws_security_group_rule" "catalogue_egress_all" {
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"          # all protocols
+  cidr_blocks       = ["0.0.0.0/0"] # allow to anywhere
+  security_group_id = module.catalogue.sg_id
+}
+
 
 
 
