@@ -157,7 +157,7 @@ module "catalogue" {
 }
 
 
-# allowing catalogue to mongodb
+/* # allowing catalogue to mongodb
 resource "aws_security_group_rule" "mongodb_catalogue" {
   type              = "ingress"
   from_port         = 27017
@@ -165,10 +165,10 @@ resource "aws_security_group_rule" "mongodb_catalogue" {
   protocol          = "tcp"
   source_security_group_id = module.catalogue.sg_id
   security_group_id = module.mongodb.sg_id
-}
+} */
 
 # allowing catalogue to mongodb
-resource "aws_security_group_rule" "mongodb_catalogue" {
+resource "aws_security_group_rule" "mongodb_allow_catalogue" {
   type              = "ingress"
   from_port         = 27017
   to_port           = 27017
