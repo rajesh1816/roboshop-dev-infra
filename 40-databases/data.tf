@@ -30,6 +30,10 @@ data "aws_ssm_parameter" "mysql_sg_id" {
   name = "/${var.project}/${var.environment}/mysql-sg-id"
 }
 
+data "aws_ssm_parameter" "databases_sg_id" {
+  name = "/${var.project}/${var.environment}/databases-sg-id"
+}
+
 data "aws_ami" "joindevops" {
   owners      = ["973714476881"]
   most_recent = true
