@@ -11,7 +11,7 @@ variable "instance_type" {
 }
 
 variable "zone_id" {
-  default = "Z00035852NN6D25PW7BUM"
+  default = "Z05791913LISJO8IEXE2Y"
 }
 
 variable "zone_name" {
