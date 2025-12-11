@@ -70,6 +70,37 @@ resource "aws_security_group_rule" "backend_alb_egress_all" {
 }
 
 
+#security group for backend alb
+module "frontend_alb" {
+  source         = "git::https://github.com/rajesh1816/terraform-sg-module.git?ref=main"
+  project        = var.project
+  environment    = var.environment
+  sg_name        = "frontend-alb"
+  sg_description = "for frontend-alb"
+  vpc_id         = local.vpc_id
+}
+
+# allowing frontend alb to backend_alb
+resource "aws_security_group_rule" "backend_alb_frontend" {
+  type              = "ingress"
+  from_port         = 80
+  to_port           = 80
+  protocol          = "tcp"
+  source_security_group_id = module.frontend.sg_id
+  security_group_id = module.backend_alb.sg_id
+}
+
+# backend-alb host outbound rule
+resource "aws_security_group_rule" "frontend_alb_egress_all" {
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"          # all protocols
+  cidr_blocks       = ["0.0.0.0/0"] # allow to anywhere
+  security_group_id = module.frontend_alb.sg_id
+}
+
+
 #security group for vpn
 module "vpn" {
   source         = "git::https://github.com/rajesh1816/terraform-sg-module.git?ref=main"
