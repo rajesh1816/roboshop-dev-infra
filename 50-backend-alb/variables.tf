@@ -14,8 +14,7 @@ variable "backend_alb_tags" {
 
 
 variable "zone_id" {
-  default = "Z05791913LISJO8IEXE2Y"
-
+  default = "Z01448731VZNPW3ACOZ36"
 }
 
 variable "zone_name" {
