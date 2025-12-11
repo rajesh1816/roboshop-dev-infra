@@ -1,7 +1,7 @@
 # catalogue target group
 resource "aws_lb_target_group" "catalogue" {
   name     = "${var.project}-${var.environment}-catalogue" #roboshop-dev-catalogue
-  port     = 8080
+  port     = 8081
   protocol = "HTTP"
   vpc_id   = local.vpc_id
   deregistration_delay = 120
