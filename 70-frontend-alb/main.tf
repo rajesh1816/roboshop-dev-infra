@@ -22,8 +22,8 @@ module "frontend_alb" {
 
 resource "aws_lb_listener" "frontend_alb" {
   load_balancer_arn = module.frontend_alb.arn
-  port              = 80
-  protocol          = "HTTP"
+  port              = 80 # 443
+  protocol          = "HTTP" #HTTPS
   # ssl_policy        = "ELBSecurityPolicy-2016-08"
   # certificate_arn   = local.acm_certificate_arn
 

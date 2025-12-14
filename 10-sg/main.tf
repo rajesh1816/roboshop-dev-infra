@@ -40,13 +40,22 @@ module "backend_alb" {
 }
 
 # Allowing backend alb from bastion
-resource "aws_security_group_rule" "backend_alb_bastion" {
+resource "aws_security_group_rule" "backend_alb_allow_http_from_bastion" {
   type                     = "ingress"
   from_port                = 80
   to_port                  = 80
   protocol                 = "tcp"
   source_security_group_id = module.bastion.sg_id
   security_group_id        = module.backend_alb.sg_id
+}
+
+resource "aws_security_group_rule" "backend_alb_allow_http_from_frontend" {
+  type              = "ingress"
+  from_port         = 80
+  to_port           = 80
+  protocol          = "tcp"
+  source_security_group_id = module.frontend.sg_id
+  security_group_id = module.backend_alb.sg_id
 }
 
 # allowing backend alb from vpn
@@ -70,7 +79,7 @@ resource "aws_security_group_rule" "backend_alb_egress_all" {
 }
 
 
-#security group for backend alb
+#security group for frontend alb
 module "frontend_alb" {
   source         = "git::https://github.com/rajesh1816/terraform-sg-module.git?ref=main"
   project        = var.project
@@ -80,14 +89,24 @@ module "frontend_alb" {
   vpc_id         = local.vpc_id
 }
 
-# allowing frontend alb to backend_alb
-resource "aws_security_group_rule" "backend_alb_frontend" {
+# allowing http to frontend_alb from internet
+resource "aws_security_group_rule" "frontend_alb_allow_http" {
   type              = "ingress"
   from_port         = 80
   to_port           = 80
   protocol          = "tcp"
-  source_security_group_id = module.frontend_alb.sg_id
-  security_group_id = module.backend_alb.sg_id
+  cidr_blocks = ["0.0.0.0/0"]
+  security_group_id = module.frontend_alb.sg_id
+}
+
+# allowing https to frontend_alb from internet
+resource "aws_security_group_rule" "frontend_alb_allow_https" {
+  type              = "ingress"
+  from_port         = 443
+  to_port           = 443
+  protocol          = "tcp"
+  cidr_blocks = ["0.0.0.0/0"]
+  security_group_id = module.frontend_alb.sg_id
 }
 
 # backend-alb host outbound rule
@@ -268,6 +287,306 @@ resource "aws_security_group_rule" "catalogue_egress_all" {
   cidr_blocks       = ["0.0.0.0/0"] # allow to anywhere
   security_group_id = module.catalogue.sg_id
 }
+
+# security for user
+module "user" {
+  source         = "git::https://github.com/rajesh1816/terraform-sg-module.git?ref=main"
+  project        = var.project
+  environment    = var.environment
+  sg_name        = "user-sg"
+  sg_description = "for user"
+  vpc_id         = local.vpc_id
+}
+
+# allowing mongodb component to user
+resource "aws_security_group_rule" "mongodb_allow_user" {
+  type              = "ingress"
+  from_port         = 27017
+  to_port           = 27017
+  protocol          = "tcp"
+  source_security_group_id = module.user.sg_id
+  security_group_id = module.mongodb.sg_id
+}
+
+# allowing redis component to user
+resource "aws_security_group_rule" "redis_allow_user" {
+  type              = "ingress"
+  from_port         = 6379
+  to_port           = 6379
+  protocol          = "tcp"
+  source_security_group_id = module.user.sg_id
+  security_group_id = module.redis.sg_id
+}
+
+# allowing user to bastion ssh
+resource "aws_security_group_rule" "user_bastion_ssh" {
+  type              = "ingress"
+  from_port         = 22
+  to_port           = 22
+  protocol          = "tcp"
+  source_security_group_id = module.bastion.sg_id
+  security_group_id = module.user.sg_id
+}
+
+# to access in bastion user service
+resource "aws_security_group_rule" "user_bastion_http" {
+  type              = "ingress"
+  from_port         = 8082
+  to_port           = 8082
+  protocol          = "tcp"
+  source_security_group_id = module.bastion.sg_id
+  security_group_id = module.user.sg_id
+}
+
+# to access user component from backend alb 
+resource "aws_security_group_rule" "user_allow_http_backend_alb" {
+  type              = "ingress"
+  from_port         = 8082
+  to_port           = 8082
+  protocol          = "tcp"
+  source_security_group_id = module.backend_alb.sg_id
+  security_group_id = module.user.sg_id
+}
+
+
+# security for cart
+module "cart" {
+  source         = "git::https://github.com/rajesh1816/terraform-sg-module.git?ref=main"
+  project        = var.project
+  environment    = var.environment
+  sg_name        = "cart-sg"
+  sg_description = "for cart"
+  vpc_id         = local.vpc_id
+}
+
+# allowing redis component to user
+resource "aws_security_group_rule" "redis_allow_cart" {
+  type              = "ingress"
+  from_port         = 6379
+  to_port           = 6379
+  protocol          = "tcp"
+  source_security_group_id = module.cart.sg_id
+  security_group_id = module.redis.sg_id
+}
+
+# allowing catalogue component to cart
+resource "aws_security_group_rule" "catalogue_allow_cart" {
+  type              = "ingress"
+  from_port         = 8081
+  to_port           = 8081
+  protocol          = "tcp"
+  source_security_group_id = module.cart.sg_id
+  security_group_id = module.catalogue.sg_id
+}
+
+# allowing cart to bastion ssh
+resource "aws_security_group_rule" "cart_bastion_ssh" {
+  type              = "ingress"
+  from_port         = 22
+  to_port           = 22
+  protocol          = "tcp"
+  source_security_group_id = module.bastion.sg_id
+  security_group_id = module.cart.sg_id
+}
+
+# to access in bastion cart service
+resource "aws_security_group_rule" "cart_allow_http_from_bastion" {
+  type              = "ingress"
+  from_port         = 8084
+  to_port           = 8084
+  protocol          = "tcp"
+  source_security_group_id = module.bastion.sg_id
+  security_group_id = module.cart.sg_id
+}
+
+# to access cart component from backend alb 
+resource "aws_security_group_rule" "cart_allow_http_from_backend_alb" {
+  type              = "ingress"
+  from_port         = 8084
+  to_port           = 8084
+  protocol          = "tcp"
+  source_security_group_id = module.backend_alb.sg_id
+  security_group_id = module.cart.sg_id
+}
+
+
+
+
+# security for shipping
+module "shipping" {
+  source         = "git::https://github.com/rajesh1816/terraform-sg-module.git?ref=main"
+  project        = var.project
+  environment    = var.environment
+  sg_name        = "shipping-sg"
+  sg_description = "for shipping"
+  vpc_id         = local.vpc_id
+}
+
+# allowing shipping component to mysql
+resource "aws_security_group_rule" "mysql_allow_shipping" {
+  type              = "ingress"
+  from_port         = 3306
+  to_port           = 3306
+  protocol          = "tcp"
+  source_security_group_id = module.shipping.sg_id
+  security_group_id = module.mysql.sg_id
+}
+
+# allowing shipping component to cart 
+resource "aws_security_group_rule" "cart_allow_shipping" {
+  type              = "ingress"
+  from_port         = 8084
+  to_port           = 8084
+  protocol          = "tcp"
+  source_security_group_id = module.cart.sg_id
+  security_group_id = module.shipping.sg_id
+}
+
+# allowing shipping to bastion ssh
+resource "aws_security_group_rule" "shipping_bastion_ssh" {
+  type              = "ingress"
+  from_port         = 22
+  to_port           = 22
+  protocol          = "tcp"
+  source_security_group_id = module.bastion.sg_id
+  security_group_id = module.shipping.sg_id
+}
+
+# to access in bastion shipping service
+resource "aws_security_group_rule" "shipping_allow_http_from_bastion" {
+  type              = "ingress"
+  from_port         = 8083
+  to_port           = 8083
+  protocol          = "tcp"
+  source_security_group_id = module.bastion.sg_id
+  security_group_id = module.shipping.sg_id
+}
+
+# to access shipping component from backend alb 
+resource "aws_security_group_rule" "shipping_allow_http_from_backend_alb" {
+  type              = "ingress"
+  from_port         = 8083
+  to_port           = 8083
+  protocol          = "tcp"
+  source_security_group_id = module.backend_alb.sg_id
+  security_group_id = module.shipping.sg_id
+}
+
+
+# security group for payment
+module "payment" {
+  source         = "git::https://github.com/rajesh1816/terraform-sg-module.git?ref=main"
+  project        = var.project
+  environment    = var.environment
+  sg_name        = "payment-sg"
+  sg_description = "for payment"
+  vpc_id         = local.vpc_id
+}
+
+# allowing payment component to cart
+resource "aws_security_group_rule" "cart_allow_payment" {
+  type              = "ingress"
+  from_port         = 8084
+  to_port           = 8084
+  protocol          = "tcp"
+  source_security_group_id = module.payment.sg_id
+  security_group_id = module.cart.sg_id
+}
+
+# allowing payment component to user 
+resource "aws_security_group_rule" "user_allow_payment" {
+  type              = "ingress"
+  from_port         = 8082
+  to_port           = 8082
+  protocol          = "tcp"
+  source_security_group_id = module.payment.sg_id
+  security_group_id = module.user.sg_id
+}
+
+# allowing payment to bastion ssh
+resource "aws_security_group_rule" "payment_bastion_ssh" {
+  type              = "ingress"
+  from_port         = 22
+  to_port           = 22
+  protocol          = "tcp"
+  source_security_group_id = module.bastion.sg_id
+  security_group_id = module.payment.sg_id
+}
+
+# to access in bastion payment service
+resource "aws_security_group_rule" "payment_allow_http_from_bastion" {
+  type              = "ingress"
+  from_port         = 8085
+  to_port           = 8085
+  protocol          = "tcp"
+  source_security_group_id = module.bastion.sg_id
+  security_group_id = module.payment.sg_id
+}
+
+# to access payment component from backend alb 
+resource "aws_security_group_rule" "payment_allow_http_from_backend_alb" {
+  type              = "ingress"
+  from_port         = 8085
+  to_port           = 8085
+  protocol          = "tcp"
+  source_security_group_id = module.backend_alb.sg_id
+  security_group_id = module.payment.sg_id
+}
+
+
+# security group for frontend
+module "frontend" {
+  source         = "git::https://github.com/rajesh1816/terraform-sg-module.git?ref=main"
+  project        = var.project
+  environment    = var.environment
+  sg_name        = "frontend-sg"
+  sg_description = "for frontend"
+  vpc_id         = local.vpc_id
+}
+
+
+# allowing frontend to bastion ssh
+resource "aws_security_group_rule" "frontend_bastion_ssh" {
+  type              = "ingress"
+  from_port         = 22
+  to_port           = 22
+  protocol          = "tcp"
+  source_security_group_id = module.bastion.sg_id
+  security_group_id = module.frontend.sg_id
+}
+
+
+# allowing frontend_alb to frontend
+resource "aws_security_group_rule" "frontend_allow_frontend_alb" {
+  type              = "ingress"
+  from_port         = 80
+  to_port           = 80
+  protocol          = "tcp"
+  source_security_group_id = module.frontend_alb.sg_id
+  security_group_id = module.frontend.sg_id
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
