@@ -50,22 +50,22 @@ resource "aws_security_group_rule" "backend_alb_allow_http_from_bastion" {
 }
 
 resource "aws_security_group_rule" "backend_alb_allow_http_from_frontend" {
-  type              = "ingress"
-  from_port         = 80
-  to_port           = 80
-  protocol          = "tcp"
+  type                     = "ingress"
+  from_port                = 80
+  to_port                  = 80
+  protocol                 = "tcp"
   source_security_group_id = module.frontend.sg_id
-  security_group_id = module.backend_alb.sg_id
+  security_group_id        = module.backend_alb.sg_id
 }
 
 # allowing backend alb from vpn
 resource "aws_security_group_rule" "backend_alb_vpn" {
-  type              = "ingress"
-  from_port         = 80
-  to_port           = 80
-  protocol          = "tcp"
+  type                     = "ingress"
+  from_port                = 80
+  to_port                  = 80
+  protocol                 = "tcp"
   source_security_group_id = module.vpn.sg_id
-  security_group_id = module.backend_alb.sg_id
+  security_group_id        = module.backend_alb.sg_id
 }
 
 # backend-alb host outbound rule
@@ -95,7 +95,7 @@ resource "aws_security_group_rule" "frontend_alb_allow_http" {
   from_port         = 80
   to_port           = 80
   protocol          = "tcp"
-  cidr_blocks = ["0.0.0.0/0"]
+  cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = module.frontend_alb.sg_id
 }
 
@@ -105,7 +105,7 @@ resource "aws_security_group_rule" "frontend_alb_allow_https" {
   from_port         = 443
   to_port           = 443
   protocol          = "tcp"
-  cidr_blocks = ["0.0.0.0/0"]
+  cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = module.frontend_alb.sg_id
 }
 
@@ -219,63 +219,63 @@ resource "aws_security_group_rule" "mongodb_catalogue" {
 
 # allowing catalogue to mongodb
 resource "aws_security_group_rule" "mongodb_allow_catalogue" {
-  type              = "ingress"
-  from_port         = 27017
-  to_port           = 27017
-  protocol          = "tcp"
+  type                     = "ingress"
+  from_port                = 27017
+  to_port                  = 27017
+  protocol                 = "tcp"
   source_security_group_id = module.catalogue.sg_id
-  security_group_id = module.databases.sg_id
+  security_group_id        = module.databases.sg_id
 }
 
 #Catalogue vpn ssh 
 resource "aws_security_group_rule" "catalogue_vpn_ssh" {
-  type              = "ingress"
-  from_port         = 22
-  to_port           = 22
-  protocol          = "tcp"
+  type                     = "ingress"
+  from_port                = 22
+  to_port                  = 22
+  protocol                 = "tcp"
   source_security_group_id = module.vpn.sg_id
-  security_group_id = module.catalogue.sg_id
+  security_group_id        = module.catalogue.sg_id
 }
 
 # catalogue bastion ssh
 resource "aws_security_group_rule" "catalogue_bastion_ssh" {
-  type              = "ingress"
-  from_port         = 22
-  to_port           = 22
-  protocol          = "tcp"
+  type                     = "ingress"
+  from_port                = 22
+  to_port                  = 22
+  protocol                 = "tcp"
   source_security_group_id = module.bastion.sg_id
-  security_group_id = module.catalogue.sg_id
+  security_group_id        = module.catalogue.sg_id
 }
 
 
 # to access in browser catalogue service
 resource "aws_security_group_rule" "catalogue_vpn_http" {
-  type              = "ingress"
-  from_port         = 8081
-  to_port           = 8081
-  protocol          = "tcp"
+  type                     = "ingress"
+  from_port                = 8081
+  to_port                  = 8081
+  protocol                 = "tcp"
   source_security_group_id = module.vpn.sg_id
-  security_group_id = module.catalogue.sg_id
+  security_group_id        = module.catalogue.sg_id
 }
 
 # to access in bastion catalogue service
 resource "aws_security_group_rule" "catalogue_bastion_http" {
-  type              = "ingress"
-  from_port         = 8081
-  to_port           = 8081
-  protocol          = "tcp"
+  type                     = "ingress"
+  from_port                = 8081
+  to_port                  = 8081
+  protocol                 = "tcp"
   source_security_group_id = module.bastion.sg_id
-  security_group_id = module.catalogue.sg_id
+  security_group_id        = module.catalogue.sg_id
 }
 
 # allowing backend_alb to catalogue
 resource "aws_security_group_rule" "catalogue_backend_alb" {
-  type              = "ingress"
-  from_port         = 8081
-  to_port           = 8081
-  protocol          = "tcp"
+  type                     = "ingress"
+  from_port                = 8081
+  to_port                  = 8081
+  protocol                 = "tcp"
   source_security_group_id = module.backend_alb.sg_id
-  security_group_id = module.catalogue.sg_id
+  security_group_id        = module.catalogue.sg_id
 }
 
 # catalogue host outbound rule
@@ -300,52 +300,52 @@ module "user" {
 
 # allowing mongodb component to user
 resource "aws_security_group_rule" "mongodb_allow_user" {
-  type              = "ingress"
-  from_port         = 27017
-  to_port           = 27017
-  protocol          = "tcp"
+  type                     = "ingress"
+  from_port                = 27017
+  to_port                  = 27017
+  protocol                 = "tcp"
   source_security_group_id = module.user.sg_id
-  security_group_id = module.mongodb.sg_id
+  security_group_id        = module.mongodb.sg_id
 }
 
 # allowing redis component to user
 resource "aws_security_group_rule" "redis_allow_user" {
-  type              = "ingress"
-  from_port         = 6379
-  to_port           = 6379
-  protocol          = "tcp"
+  type                     = "ingress"
+  from_port                = 6379
+  to_port                  = 6379
+  protocol                 = "tcp"
   source_security_group_id = module.user.sg_id
-  security_group_id = module.redis.sg_id
+  security_group_id        = module.redis.sg_id
 }
 
 # allowing user to bastion ssh
 resource "aws_security_group_rule" "user_bastion_ssh" {
-  type              = "ingress"
-  from_port         = 22
-  to_port           = 22
-  protocol          = "tcp"
+  type                     = "ingress"
+  from_port                = 22
+  to_port                  = 22
+  protocol                 = "tcp"
   source_security_group_id = module.bastion.sg_id
-  security_group_id = module.user.sg_id
+  security_group_id        = module.user.sg_id
 }
 
 # to access in bastion user service
 resource "aws_security_group_rule" "user_bastion_http" {
-  type              = "ingress"
-  from_port         = 8082
-  to_port           = 8082
-  protocol          = "tcp"
+  type                     = "ingress"
+  from_port                = 8082
+  to_port                  = 8082
+  protocol                 = "tcp"
   source_security_group_id = module.bastion.sg_id
-  security_group_id = module.user.sg_id
+  security_group_id        = module.user.sg_id
 }
 
 # to access user component from backend alb 
 resource "aws_security_group_rule" "user_allow_http_backend_alb" {
-  type              = "ingress"
-  from_port         = 8082
-  to_port           = 8082
-  protocol          = "tcp"
+  type                     = "ingress"
+  from_port                = 8082
+  to_port                  = 8082
+  protocol                 = "tcp"
   source_security_group_id = module.backend_alb.sg_id
-  security_group_id = module.user.sg_id
+  security_group_id        = module.user.sg_id
 }
 
 
@@ -361,52 +361,52 @@ module "cart" {
 
 # allowing redis component to user
 resource "aws_security_group_rule" "redis_allow_cart" {
-  type              = "ingress"
-  from_port         = 6379
-  to_port           = 6379
-  protocol          = "tcp"
+  type                     = "ingress"
+  from_port                = 6379
+  to_port                  = 6379
+  protocol                 = "tcp"
   source_security_group_id = module.cart.sg_id
-  security_group_id = module.redis.sg_id
+  security_group_id        = module.redis.sg_id
 }
 
 # allowing catalogue component to cart
 resource "aws_security_group_rule" "catalogue_allow_cart" {
-  type              = "ingress"
-  from_port         = 8081
-  to_port           = 8081
-  protocol          = "tcp"
+  type                     = "ingress"
+  from_port                = 8081
+  to_port                  = 8081
+  protocol                 = "tcp"
   source_security_group_id = module.cart.sg_id
-  security_group_id = module.catalogue.sg_id
+  security_group_id        = module.catalogue.sg_id
 }
 
 # allowing cart to bastion ssh
 resource "aws_security_group_rule" "cart_bastion_ssh" {
-  type              = "ingress"
-  from_port         = 22
-  to_port           = 22
-  protocol          = "tcp"
+  type                     = "ingress"
+  from_port                = 22
+  to_port                  = 22
+  protocol                 = "tcp"
   source_security_group_id = module.bastion.sg_id
-  security_group_id = module.cart.sg_id
+  security_group_id        = module.cart.sg_id
 }
 
 # to access in bastion cart service
 resource "aws_security_group_rule" "cart_allow_http_from_bastion" {
-  type              = "ingress"
-  from_port         = 8084
-  to_port           = 8084
-  protocol          = "tcp"
+  type                     = "ingress"
+  from_port                = 8084
+  to_port                  = 8084
+  protocol                 = "tcp"
   source_security_group_id = module.bastion.sg_id
-  security_group_id = module.cart.sg_id
+  security_group_id        = module.cart.sg_id
 }
 
 # to access cart component from backend alb 
 resource "aws_security_group_rule" "cart_allow_http_from_backend_alb" {
-  type              = "ingress"
-  from_port         = 8084
-  to_port           = 8084
-  protocol          = "tcp"
+  type                     = "ingress"
+  from_port                = 8084
+  to_port                  = 8084
+  protocol                 = "tcp"
   source_security_group_id = module.backend_alb.sg_id
-  security_group_id = module.cart.sg_id
+  security_group_id        = module.cart.sg_id
 }
 
 
@@ -424,52 +424,52 @@ module "shipping" {
 
 # allowing shipping component to mysql
 resource "aws_security_group_rule" "mysql_allow_shipping" {
-  type              = "ingress"
-  from_port         = 3306
-  to_port           = 3306
-  protocol          = "tcp"
+  type                     = "ingress"
+  from_port                = 3306
+  to_port                  = 3306
+  protocol                 = "tcp"
   source_security_group_id = module.shipping.sg_id
-  security_group_id = module.mysql.sg_id
+  security_group_id        = module.mysql.sg_id
 }
 
 # allowing shipping component to cart 
 resource "aws_security_group_rule" "cart_allow_shipping" {
-  type              = "ingress"
-  from_port         = 8084
-  to_port           = 8084
-  protocol          = "tcp"
+  type                     = "ingress"
+  from_port                = 8084
+  to_port                  = 8084
+  protocol                 = "tcp"
   source_security_group_id = module.cart.sg_id
-  security_group_id = module.shipping.sg_id
+  security_group_id        = module.shipping.sg_id
 }
 
 # allowing shipping to bastion ssh
 resource "aws_security_group_rule" "shipping_bastion_ssh" {
-  type              = "ingress"
-  from_port         = 22
-  to_port           = 22
-  protocol          = "tcp"
+  type                     = "ingress"
+  from_port                = 22
+  to_port                  = 22
+  protocol                 = "tcp"
   source_security_group_id = module.bastion.sg_id
-  security_group_id = module.shipping.sg_id
+  security_group_id        = module.shipping.sg_id
 }
 
 # to access in bastion shipping service
 resource "aws_security_group_rule" "shipping_allow_http_from_bastion" {
-  type              = "ingress"
-  from_port         = 8083
-  to_port           = 8083
-  protocol          = "tcp"
+  type                     = "ingress"
+  from_port                = 8083
+  to_port                  = 8083
+  protocol                 = "tcp"
   source_security_group_id = module.bastion.sg_id
-  security_group_id = module.shipping.sg_id
+  security_group_id        = module.shipping.sg_id
 }
 
 # to access shipping component from backend alb 
 resource "aws_security_group_rule" "shipping_allow_http_from_backend_alb" {
-  type              = "ingress"
-  from_port         = 8083
-  to_port           = 8083
-  protocol          = "tcp"
+  type                     = "ingress"
+  from_port                = 8083
+  to_port                  = 8083
+  protocol                 = "tcp"
   source_security_group_id = module.backend_alb.sg_id
-  security_group_id = module.shipping.sg_id
+  security_group_id        = module.shipping.sg_id
 }
 
 
@@ -485,52 +485,52 @@ module "payment" {
 
 # allowing payment component to cart
 resource "aws_security_group_rule" "cart_allow_payment" {
-  type              = "ingress"
-  from_port         = 8084
-  to_port           = 8084
-  protocol          = "tcp"
+  type                     = "ingress"
+  from_port                = 8084
+  to_port                  = 8084
+  protocol                 = "tcp"
   source_security_group_id = module.payment.sg_id
-  security_group_id = module.cart.sg_id
+  security_group_id        = module.cart.sg_id
 }
 
 # allowing payment component to user 
 resource "aws_security_group_rule" "user_allow_payment" {
-  type              = "ingress"
-  from_port         = 8082
-  to_port           = 8082
-  protocol          = "tcp"
+  type                     = "ingress"
+  from_port                = 8082
+  to_port                  = 8082
+  protocol                 = "tcp"
   source_security_group_id = module.payment.sg_id
-  security_group_id = module.user.sg_id
+  security_group_id        = module.user.sg_id
 }
 
 # allowing payment to bastion ssh
 resource "aws_security_group_rule" "payment_bastion_ssh" {
-  type              = "ingress"
-  from_port         = 22
-  to_port           = 22
-  protocol          = "tcp"
+  type                     = "ingress"
+  from_port                = 22
+  to_port                  = 22
+  protocol                 = "tcp"
   source_security_group_id = module.bastion.sg_id
-  security_group_id = module.payment.sg_id
+  security_group_id        = module.payment.sg_id
 }
 
 # to access in bastion payment service
 resource "aws_security_group_rule" "payment_allow_http_from_bastion" {
-  type              = "ingress"
-  from_port         = 8085
-  to_port           = 8085
-  protocol          = "tcp"
+  type                     = "ingress"
+  from_port                = 8085
+  to_port                  = 8085
+  protocol                 = "tcp"
   source_security_group_id = module.bastion.sg_id
-  security_group_id = module.payment.sg_id
+  security_group_id        = module.payment.sg_id
 }
 
 # to access payment component from backend alb 
 resource "aws_security_group_rule" "payment_allow_http_from_backend_alb" {
-  type              = "ingress"
-  from_port         = 8085
-  to_port           = 8085
-  protocol          = "tcp"
+  type                     = "ingress"
+  from_port                = 8085
+  to_port                  = 8085
+  protocol                 = "tcp"
   source_security_group_id = module.backend_alb.sg_id
-  security_group_id = module.payment.sg_id
+  security_group_id        = module.payment.sg_id
 }
 
 
@@ -547,23 +547,23 @@ module "frontend" {
 
 # allowing frontend to bastion ssh
 resource "aws_security_group_rule" "frontend_bastion_ssh" {
-  type              = "ingress"
-  from_port         = 22
-  to_port           = 22
-  protocol          = "tcp"
+  type                     = "ingress"
+  from_port                = 22
+  to_port                  = 22
+  protocol                 = "tcp"
   source_security_group_id = module.bastion.sg_id
-  security_group_id = module.frontend.sg_id
+  security_group_id        = module.frontend.sg_id
 }
 
 
 # allowing frontend_alb to frontend
 resource "aws_security_group_rule" "frontend_allow_frontend_alb" {
-  type              = "ingress"
-  from_port         = 80
-  to_port           = 80
-  protocol          = "tcp"
+  type                     = "ingress"
+  from_port                = 80
+  to_port                  = 80
+  protocol                 = "tcp"
   source_security_group_id = module.frontend_alb.sg_id
-  security_group_id = module.frontend.sg_id
+  security_group_id        = module.frontend.sg_id
 }
 
 
