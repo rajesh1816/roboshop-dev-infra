@@ -7,9 +7,9 @@ terraform {
   }
 
   backend "s3" {
-    bucket       = "84s-demo-remotest-comp"
+    bucket = "84s-demo-remotest-comp"
     #bucket       = "84s-demo-remotest"
-    key          = "roboshop-dev-user"
+    key = "roboshop-dev-user"
     #key          = "roboshop-dev-backend-alb"
     region       = "us-east-1"
     use_lockfile = true
