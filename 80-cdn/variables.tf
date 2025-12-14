@@ -1,15 +1,15 @@
 variable "project" {
-    default = "roboshop"
+  default = "roboshop"
 }
 
 variable "environment" {
-    default = "dev"
+  default = "dev"
 }
 
 variable "zone_id" {
-    default = "Z032558618100M4EJX8X4"
+  default = "Z032558618100M4EJX8X4"
 }
 
 variable "zone_name" {
-    default = "rajeshit.space"
+  default = "rajeshit.space"
 }
